@@ -11,10 +11,13 @@
                     <field name="pos_bom_count" widget="statinfo" string="POS BoM"/>
                 </button>
             </div>
-            <!-- Add is_pos_bom_product checkbox under POS tab -->
-            <xpath expr="//group[@name='pos']" position="inside">
-                <field name="is_pos_bom_product"/>
-            </xpath>
+            <!-- Add is_pos_bom_product checkbox in the top options area -->
+            <div name="options" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_pos_bom_product"/>
+                    <label for="is_pos_bom_product" string="Is POS BoM Product"/>
+                </span>
+            </div>
         </field>
     </record>
 </odoo>
