@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_pos_product_bom_form" model="ir.ui.view">
+        <field name="name">pos.product.bom.form</field>
+        <field name="model">pos.product.bom</field>
+        <field name="arch" type="xml">
+            <form string="POS Product BoM">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'" groups="slv_pos_product_bom.group_pos_bom_manager"/>
+                    <button name="action_draft" string="Set to Draft" type="object" invisible="state != 'confirmed'" groups="slv_pos_product_bom.group_pos_bom_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_tmpl_id" readonly="state == 'confirmed'"/>
+                            <field name="quantity" readonly="state == 'confirmed'"/>
+                        </group>
+                        <group>
+                            <field name="product_tmpl_id_uom_category" invisible="1"/>
+                            <field name="uom_id" readonly="state == 'confirmed'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Ingredients">
+                            <field name="bom_line_ids" readonly="state == 'confirmed'">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="product_id_uom_category" invisible="1"/>
+                                    <field name="uom_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_pos_product_bom_tree" model="ir.ui.view">
+        <field name="name">pos.product.bom.tree</field>
+        <field name="model">pos.product.bom</field>
+        <field name="arch" type="xml">
+            <list string="POS Product BoM">
+                <field name="name"/>
+                <field name="product_tmpl_id"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'confirmed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_pos_product_bom" model="ir.actions.act_window">
+        <field name="name">POS Products BoM</field>
+        <field name="res_model">pos.product.bom</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first POS Bill of Materials
+            </p>
+            <p>
+                Manage raw ingredients required for your POS finished products.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_pos_product_bom" 
+              name="POS Products BoM" 
+              parent="point_of_sale.menu_point_rep" 
+              action="action_pos_product_bom" 
+              sequence="20"/>
+</odoo>
