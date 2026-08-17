@@ -16,25 +16,25 @@ When a finished food item (e.g., a Burger) is sold in the POS, this module inter
 ## Configuration
 
 1. **Enable POS BoM on a Product**
-   - Navigate to **Inventory** > **Products** or **POS** > **Products**.
-   - Open a product form (e.g., "Classic Burger").
-   - Under the **Point of Sale** tab, check the box **Is POS BoM Product?**.
-   - Save the product.
+   - Navigate to **Inventory** > **Products** or **Point of Sale** > **Products** > **Products**.
+   - Open a product form (e.g., "Hot GreenTea").
+   - At the top options area next to *Point of Sale*, check the box **Is POS BoM Product?**.
+   - Save the product. The system automatically initializes a POS BoM for this product.
 
    ![Product Form with POS BoM Configuration](static/description/pos_bom_product_form.jpg)
 
-2. **Create a POS Bill of Materials**
-   - Navigate to **Point of Sale** > **Products** > **POS Products BoM**.
-   - Click **New** to create a new BoM.
-   - Select the **Product** (only products with *Is POS BoM Product?* checked will appear).
-   - Add the **Ingredients** under the BoM Lines tab. Specify the ingredient product, quantity, and unit of measure.
+2. **Create or Manage a POS Bill of Materials**
+   - Navigate to **Point of Sale** > **Products** > **POS Product BoM**.
+   - Click **New** to create a new BoM or open an existing one.
+   - Select the **Product** (only products with *Is POS BoM Product?* checked will appear). The reference title will automatically populate as `[Product Name]-Structure`.
+   - Add the raw ingredients under the **Product Structure** tab. Specify the **Component**, **Quantity**, and **Product Unit of Measure**.
    - Click the **Confirm** button at the top left to activate this BoM. 
 
    ![POS BoM Configuration Form](static/description/pos_bom_form.jpg)
 
-3. **User Access Rights**
-   - **POS BoM Manager**: Can create, edit, confirm, and delete BoM records.
-   - **Standard POS Users**: Have read-only access to BoMs.
+3. **User Access Rights & Exporting**
+   - **All POS Users**: Can create, edit, confirm, and export POS BoM records directly.
+   - **Exporting Data**: Supports exporting BoMs along with component names using standard Odoo Export dialog.
 
 ---
 
