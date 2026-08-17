@@ -46,6 +46,16 @@ class PosProductBom(models.Model):
         ('cancelled', 'Cancelled')
     ], string='Status', default='draft', required=True)
 
+    @api.model
+    def load(self, fields, data):
+        new_fields = []
+        for f in fields:
+            if f == 'bom_line_ids':
+                new_fields.append('bom_line_ids/product_id')
+            else:
+                new_fields.append(f)
+        return super().load(new_fields, data)
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
