@@ -102,9 +102,26 @@ class PosProductBomLine(models.Model):
     bom_id = fields.Many2one(
         'pos.product.bom', 
         string='BoM', 
-        required=True, 
+        required=False, 
         ondelete='cascade'
     )
+
+    @api.model
+    def _name_search(self, name, domain=None, operator='ilike', limit=100, order=None):
+        if self.env.context.get('import_file'):
+            return []
+        domain = domain or []
+        if name:
+            domain = [('product_id.display_name', operator, name)] + domain
+        return self._search(domain, limit=limit, order=order)
+
+    @api.model
+    def name_create(self, name):
+        product = self.env['product.product'].search(['|', ('display_name', '=', name), ('name', '=', name)], limit=1)
+        if product:
+            line = self.create({'product_id': product.id, 'quantity': 1.0, 'uom_id': product.uom_id.id})
+            return line.id, line.display_name
+        return super().name_create(name)
     product_id = fields.Many2one(
         'product.product', 
         string='Component', 
