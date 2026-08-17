@@ -27,7 +27,7 @@ class PosProductBom(models.Model):
     )
     uom_id = fields.Many2one(
         'uom.uom', 
-        string='Unit of Measure', 
+        string='Product Unit of Measure', 
         required=True,
         domain="[('category_id', '=', product_tmpl_id_uom_category)]"
     )
@@ -38,7 +38,7 @@ class PosProductBom(models.Model):
     bom_line_ids = fields.One2many(
         'pos.product.bom.line', 
         'bom_id', 
-        string='BoM Lines'
+        string='Product BoM Lines'
     )
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -92,6 +92,12 @@ class PosProductBom(models.Model):
 class PosProductBomLine(models.Model):
     _name = 'pos.product.bom.line'
     _description = 'POS Product BoM Line'
+    _rec_name = 'product_id'
+
+    @api.depends('product_id')
+    def _compute_display_name(self):
+        for line in self:
+            line.display_name = line.product_id.display_name if line.product_id else _("New Line")
 
     bom_id = fields.Many2one(
         'pos.product.bom', 
@@ -101,7 +107,7 @@ class PosProductBomLine(models.Model):
     )
     product_id = fields.Many2one(
         'product.product', 
-        string='Ingredient', 
+        string='Component', 
         required=True
     )
     quantity = fields.Float(
@@ -111,7 +117,7 @@ class PosProductBomLine(models.Model):
     )
     uom_id = fields.Many2one(
         'uom.uom', 
-        string='Unit of Measure', 
+        string='Product Unit of Measure', 
         required=True,
         domain="[('category_id', '=', product_id_uom_category)]"
     )
