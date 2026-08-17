@@ -56,6 +56,26 @@
         </field>
     </record>
 
+    <!-- Search View -->
+    <record id="view_pos_product_bom_search" model="ir.ui.view">
+        <field name="name">pos.product.bom.search</field>
+        <field name="model">pos.product.bom</field>
+        <field name="arch" type="xml">
+            <search string="Search POS Products BoM">
+                <field name="name" string="Reference"/>
+                <field name="product_tmpl_id" string="Product"/>
+                <field name="bom_line_ids" string="Component" filter_domain="[('bom_line_ids.product_id', 'ilike', self)]"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Action -->
     <record id="action_pos_product_bom" model="ir.actions.act_window">
         <field name="name">POS Products BoM</field>
