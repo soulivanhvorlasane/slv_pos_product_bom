@@ -107,6 +107,14 @@ class PosProductBomLine(models.Model):
     )
 
     @api.model
+    def _search(self, domain, offset=0, limit=None, order=None):
+        if self.env.context.get('import_file'):
+            for leaf in domain:
+                if isinstance(leaf, (list, tuple)) and leaf[0] in ('display_name', 'name'):
+                    return self.browse()
+        return super()._search(domain, offset=offset, limit=limit, order=order)
+
+    @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=100, order=None):
         if self.env.context.get('import_file'):
             return []
