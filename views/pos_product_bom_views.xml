@@ -7,34 +7,33 @@
         <field name="arch" type="xml">
             <form string="POS Product BoM">
                 <header>
-                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'" groups="slv_pos_product_bom.group_pos_bom_manager"/>
-                    <button name="action_draft" string="Set to Draft" type="object" invisible="state != 'confirmed'" groups="slv_pos_product_bom.group_pos_bom_manager"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_draft" string="Set to Draft" type="object" invisible="state != 'confirmed'"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state not in ('draft','confirmed')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancelled"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1" force_save="1"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="product_tmpl_id" readonly="state == 'confirmed'"/>
                             <field name="quantity" readonly="state == 'confirmed'"/>
-                        </group>
-                        <group>
                             <field name="product_tmpl_id_uom_category" invisible="1"/>
                             <field name="uom_id" readonly="state == 'confirmed'"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Ingredients">
+                        <page string="Product Structure">
                             <field name="bom_line_ids" readonly="state == 'confirmed'">
                                 <list editable="bottom">
-                                    <field name="product_id"/>
+                                    <field name="product_id" string="Component"/>
                                     <field name="quantity"/>
-                                    <field name="product_id_uom_category" invisible="1"/>
-                                    <field name="uom_id"/>
+                                    <field name="product_id_uom_category" column_invisible="True"/>
+                                    <field name="uom_id" string="Product Unit of Measure"/>
                                 </list>
                             </field>
                         </page>
@@ -49,12 +48,10 @@
         <field name="name">pos.product.bom.tree</field>
         <field name="model">pos.product.bom</field>
         <field name="arch" type="xml">
-            <list string="POS Product BoM">
-                <field name="name"/>
-                <field name="product_tmpl_id"/>
-                <field name="quantity"/>
-                <field name="uom_id"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'confirmed'"/>
+            <list string="POS Products BoM">
+                <field name="name" string="Reference"/>
+                <field name="product_tmpl_id" string="Product"/>
+                <field name="uom_id" string="Product Unit of Measure"/>
             </list>
         </field>
     </record>
@@ -76,8 +73,8 @@
 
     <!-- Menu Item -->
     <menuitem id="menu_pos_product_bom" 
-              name="POS Products BoM" 
-              parent="point_of_sale.menu_point_rep" 
+              name="POS Product BoM" 
+              parent="point_of_sale.pos_config_menu_catalog" 
               action="action_pos_product_bom" 
               sequence="20"/>
 </odoo>

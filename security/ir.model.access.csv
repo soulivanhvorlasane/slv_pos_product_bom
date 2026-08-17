@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_pos_product_bom_manager,pos.product.bom.manager,model_pos_product_bom,slv_pos_product_bom.group_pos_bom_manager,1,1,1,1
 access_pos_product_bom_line_manager,pos.product.bom.line.manager,model_pos_product_bom_line,slv_pos_product_bom.group_pos_bom_manager,1,1,1,1
-access_pos_product_bom_user,pos.product.bom.user,model_pos_product_bom,point_of_sale.group_pos_user,1,0,0,0
-access_pos_product_bom_line_user,pos.product.bom.line.user,model_pos_product_bom_line,point_of_sale.group_pos_user,1,0,0,0
+access_pos_product_bom_user,pos.product.bom.user,model_pos_product_bom,point_of_sale.group_pos_user,1,1,1,1
+access_pos_product_bom_line_user,pos.product.bom.line.user,model_pos_product_bom_line,point_of_sale.group_pos_user,1,1,1,1

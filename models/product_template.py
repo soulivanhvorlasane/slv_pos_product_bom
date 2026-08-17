@@ -13,6 +13,38 @@ class ProductTemplate(models.Model):
         string='POS BoM Count',
         compute='_compute_pos_bom_count'
     )
+    
+    pos_bom_ids = fields.One2many(
+        'pos.product.bom',
+        'product_tmpl_id',
+        string='POS BoMs'
+    )
+    
+    def write(self, vals):
+        res = super(ProductTemplate, self).write(vals)
+        if 'is_pos_bom_product' in vals:
+            for product in self:
+                if product.is_pos_bom_product and not product.pos_bom_ids:
+                    self.env['pos.product.bom'].sudo().create({
+                        'product_tmpl_id': product.id,
+                        'quantity': 1.0,
+                        'uom_id': product.uom_id.id,
+                    })
+                elif not product.is_pos_bom_product and product.pos_bom_ids:
+                    product.pos_bom_ids.sudo().unlink()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super(ProductTemplate, self).create(vals_list)
+        for product in products:
+            if product.is_pos_bom_product and not product.pos_bom_ids:
+                self.env['pos.product.bom'].sudo().create({
+                    'product_tmpl_id': product.id,
+                    'quantity': 1.0,
+                    'uom_id': product.uom_id.id,
+                })
+        return products
 
     def _compute_pos_bom_count(self):
         for template in self:

@@ -18,6 +18,7 @@
                     <label for="is_pos_bom_product" string="Is POS BoM Product"/>
                 </span>
             </div>
+
         </field>
     </record>
 </odoo>

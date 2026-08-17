@@ -42,13 +42,17 @@ class PosProductBom(models.Model):
     )
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('confirmed', 'Confirmed')
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled')
     ], string='Status', default='draft', required=True)
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', _('New')) == _('New'):
+            if (not vals.get('name') or vals.get('name') == _('New')) and vals.get('product_tmpl_id'):
+                product = self.env['product.template'].browse(vals['product_tmpl_id'])
+                vals['name'] = f"{product.name}-Structure"
+            elif vals.get('name', _('New')) == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('pos.product.bom') or _('New')
         return super().create(vals_list)
 
@@ -74,10 +78,15 @@ class PosProductBom(models.Model):
         for bom in self:
             bom.state = 'draft'
 
+    def action_cancel(self):
+        for bom in self:
+            bom.state = 'cancelled'
+
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
             self.uom_id = self.product_tmpl_id.uom_id.id
+            self.name = f"{self.product_tmpl_id.name}-Structure"
 
 
 class PosProductBomLine(models.Model):
