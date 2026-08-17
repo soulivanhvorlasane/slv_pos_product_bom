@@ -125,10 +125,27 @@ class PosProductBomLine(models.Model):
 
     @api.model
     def name_create(self, name):
-        product = self.env['product.product'].search(['|', ('display_name', '=', name), ('name', '=', name)], limit=1)
-        if product:
-            line = self.create({'product_id': product.id, 'quantity': 1.0, 'uom_id': product.uom_id.id})
-            return line.id, line.display_name
+        if name:
+            clean_name = name.strip()
+            matching_products = self.env['product.product'].name_search(clean_name, operator='ilike', limit=1)
+            if not matching_products:
+                matching_products = self.env['product.product'].name_search(clean_name, operator='=', limit=1)
+            
+            product = False
+            if matching_products:
+                product = self.env['product.product'].browse(matching_products[0][0])
+            else:
+                product = self.env['product.product'].search([
+                    '|', '|', '|',
+                    ('display_name', 'ilike', clean_name),
+                    ('name', 'ilike', clean_name),
+                    ('default_code', '=', clean_name),
+                    ('barcode', '=', clean_name)
+                ], limit=1)
+
+            if product:
+                line = self.create({'product_id': product.id, 'quantity': 1.0, 'uom_id': product.uom_id.id})
+                return line.id, line.display_name
         return super().name_create(name)
     product_id = fields.Many2one(
         'product.product', 
